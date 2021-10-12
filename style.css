@@ -1,0 +1,100 @@
+* {
+	border-box: box-sizing;
+}
+body {
+	 background-color: #f4ebe6;
+	 background-size: cover;
+	 background-position: top right;
+   background-attachment: fixed;
+   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+main {
+	padding: 2rem;
+}
+
+ table, th, td {
+  border: none;
+  outline: 0;
+  border-collapse: collapse;
+}
+
+
+table th {
+	font-weight: normal;
+}
+
+th,
+td {
+	padding: 0.5rem;
+  border: 1px solid #fff;
+ 	white-space: nowrap;
+}
+
+table tr:hover td {
+ 	filter: brightness(0.95);
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.table-index-header-1 {
+	background: #dfcfac;
+ 	border-bottom: 1px solid transparent;
+}
+.table-index-header-2 {
+	background: #ecdcb9;
+ 	border-bottom: 1px solid transparent;
+}
+.table-index-body-1 {
+	background: #f9eac7;
+}
+
+.table-coffee-header-1 {
+	background: #e3c7b1;
+ 	border-bottom: 1px solid transparent;
+}
+.table-coffee-header-2 {
+	background: #f0d6c1;
+ 	border-bottom: 1px solid transparent;
+}
+.table-coffee-body-1 {
+	background: #ffe5cf;
+}
+
+.table-water-header-1 {
+	background: #aed0df;
+ 	border-bottom: 1px solid transparent;
+}
+.table-water-header-2 {
+	background: #c2dfec;
+ 	border-bottom: 1px solid transparent;
+}
+.table-water-body-1 {
+	background: #d9eff9;
+}
+
+.table-brewed-coffee-header-1 {
+	background: #800000;
+}
+.table-brewed-coffee-header-2 {
+	background: #8B0000;
+}
+.table-brewed-coffee-body-1 {
+	background: #A52A2A;
+}
+
+.table-cost-header-1 {
+	background: #32CD32;
+}
+.table-cost-header-2 {
+	background: #00FF00;
+}
+.table-cost-body-1 {
+	background: #98FB98;
+}
