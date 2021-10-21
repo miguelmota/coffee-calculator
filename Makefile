@@ -3,7 +3,7 @@ build:
 	lein cljsbuild once
 
 watch:
-	lein cljsbuild once
+	lein cljsbuild auto
 
 format:
 	lein cljfmt fix

@@ -5,3 +5,4 @@ deps.edn
 .cpcache
 target
 .lein-repl-history
+todo.txt

@@ -1,5 +1,5 @@
 * {
-	border-box: box-sizing;
+  box-sizing: border-box;
 }
 body {
 	 background-color: #f4ebe6;
@@ -11,13 +11,53 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
+  color: #000;
 }
 
 main {
 	padding: 2rem;
 }
 
- table, th, td {
+.title {
+}
+
+.title a,
+.title a:hover {
+  text-decoration: none;
+  color: #000;
+}
+
+.settings {
+  display: flex;
+  justify-content: space-around;
+}
+
+.column {
+}
+
+@media (max-width: 500px) {
+  .settings {
+    flex-direction: column;
+  }
+  .column {
+    margin-bottom: 1rem;
+  }
+}
+
+.input-container label {
+  display: block;
+}
+
+input[type="text"] {
+  font-size: 16px;
+}
+
+.table-container {
+  overflow: auto;
+  margin-bottom: 1rem;
+}
+
+table, th, td {
   border: none;
   outline: 0;
   border-collapse: collapse;
