@@ -1,3 +1,6 @@
+serve:
+	(cd public && python -m http.server --bind 0.0.0.0 8000)
+
 build:
 	rm public/js/main.js
 	lein cljsbuild once
@@ -5,7 +8,7 @@ build:
 watch:
 	lein cljsbuild auto
 
-format:
+lint:
 	lein cljfmt fix
 
 open-old:

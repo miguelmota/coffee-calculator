@@ -17,13 +17,36 @@
   [num]
   (.format nff (str num)))
 
-(println "hello world")
-(js/console.log "hello world")
+; strong 1:12 normal 1:16 weak 1:20
+; add pounds and kilos to ground coffee
+; add gallons to water and brewed coffee
+; slider for strength
 
-(defn average [a b]
-  (/ (+ a b) 2.0))
+(def cups [[1 "Espresso"]
+           [2 "Espresso"]
+           [3 "Espresso"]
+           [4 "Espresso, Ristretto, Cortado"]
+           [5 "Cappuccino, Sm latte"]
+           [6 "Cappuccino, Sm latte"]
+           [7 "Latte"]
+           [8 "Latte"]
+           [9 "Latte"]
+           [10 "Latte"]
+           [11 "Latte"]
+           [12 "Latte, Cold brew"]
+           [13 "XL Latte, Cold brew"]
+           [14 "XL Latte, Cold brew, Iced coffee"]
+           [15 "XL Latte, Cold brew, Iced coffee"]
+           [16 "XL Latte, Cold brew, Iced coffee"]])
 
-(println (average 20 13))
+(def ratios [["AeroPress" 16]
+             ["French Press" 12]
+             ["V60" 15]
+             ["Chemex" 17]
+             ["Moka Pot" 7]
+             ["Cold Brew" 4]
+             ["Siphon" 16]
+             ["Espresso" 2]])
 
 (defn handle-input [event]
   (println event))
@@ -35,6 +58,8 @@
 
 (defonce cup-size-input (r/atom "6"))
 (defonce brew-ratio-input (r/atom "17"))
+(defonce bag-size-oz (r/atom "12"))
+(defonce bag-cost (r/atom "14"))
 
 (def oneOz 1)
 (def ozToGrams (* oneOz 28.3495))
@@ -50,8 +75,14 @@
 (defn formatNumber [value]
   (nf (gstring/format "%.3f" (if (js/isNaN value) 0 value))))
 
+(defn formatCurrency [value]
+  (nf (gstring/format "%.2f" (if (js/isNaN value) 0 value))))
+
 (defn app []
-  ((let [coffee-per-cup (r/atom (/ (* (js/parseInt @cup-size-input) ozToGrams) (js/parseInt @brew-ratio-input)))]
+  ((
+    let [coffee-per-cup (r/atom (/ (* (js/parseInt @cup-size-input) ozToGrams) (js/parseInt @brew-ratio-input)))
+         water-per-cup (r/atom (* @coffee-per-cup (js/parseInt @brew-ratio-input)))
+        ]
      (defn calc-rows []
        [:tbody
         (doall (for [index (range 1 19)]
@@ -63,12 +94,16 @@
                        coffeeCups (* coffeeOz ozToCups)
                        waterGrams (* coffeeGrams @brew-ratio-input)
                        waterOz (* coffeeGrams (/ @brew-ratio-input ozToGrams))
-                       waterCups (* index 0.75)
-                       waterPints (* index 0.375)
-                       waterQuarts (* index 0.1875)
-                       waterHalfGallon (* index 0.09375)
-                       waterCCMilli (* index 177.44)
-                       waterLiters (* index 0.177441)]
+                       waterCups (/ waterOz 8)
+                       waterPints (/ waterOz 16)
+                       waterQuarts (/ waterOz 32)
+                       waterHalfGallon (/ waterOz 64)
+                       waterCCMilli (* waterOz 29.574)
+                       waterLiters (/ waterOz 33.814)
+                       costPerCup (* coffeeGrams (/ @bag-cost (* @bag-size-oz 28.3495)))
+                       v (/ (* waterOz 29.574) @brew-ratio-input)
+                       brewedGrams (/ (- (* waterOz 29.574) (* 1.995 v)) 1)
+                       brewedOz (/ (- (* waterOz 29.574) (* 1.995 v)) 29.574)]
 
                    ^{:key index} [:tr
                                   [:td {:class "table-index-body-1"} index]
@@ -85,130 +120,153 @@
                                   [:td {:class "table-water-body-1"} (formatNumber waterHalfGallon)]
                                   [:td {:class "table-water-body-1"} (formatNumber waterCCMilli)]
                                   [:td {:class "table-water-body-1"} (formatNumber waterLiters)]
-                                  [:td {:class "table-brewed-coffee-body-1"} (formatNumber 0)]
-                                  [:td {:class "table-brewed-coffee-body-1"} (formatNumber 0)]
-                                  [:td {:class "table-cost-body-1"} (formatNumber  0)]])))])
+                                  [:td {:class "table-brewed-coffee-body-1"} (formatNumber brewedGrams)]
+                                  [:td {:class "table-brewed-coffee-body-1"} (formatNumber brewedOz)]
+                                  [:td {:class "table-cost-body-1"} (formatCurrency costPerCup)]])))])
 
      (fn []
        [:main
-        [:h1 {:class "title"} [:a {:href "/" :rel "noopener noreferrer"} "Coffee Calculator ☕"]]
-        [:p "⚠️ Website Under Construction"]
+        [:header {:class "header"}
+         [:h1 {:class "title"} [:a {:href "/" :rel "noopener noreferrer"} "Coffee Calculator ☕"]]]
         [:div {:class "settings"}
          [:div {:class "column"}
-          [:div "Settings"]
-          [:table
-           [:tbody
-
-            [:tr
-             [:td
-              [text-input cup-size-input "cup size (oz) (default 8oz)"]]]
-
-            [:tr
-             [:td
-              [text-input brew-ratio-input, "brew ratio (g) (default 17g)"]]]
-
-            [:tr
-             [:td
-              [:div "coffee per cup (g)"
-               [:div (formatNumber @coffee-per-cup)]]]]]]]
-
-         [:div {:class "column"}
-          [:div "Coffee to water ratios"]
-          [:table
+          [:table {:class "table ratios-table"}
            [:thead
             [:tr
-             [:td "Brew device"]
-             [:td "Ratio"]]]
+             [:th {:col-span 2} "Cup sizes (select one)"]]
+            [:tr
+             [:th {:class "left-align"}
+              [:div "Ounces (oz)"]]
+             [:th {:class "left-align"} "Example drinks"]]]
 
            [:tbody
-            [:tr
-             [:td "AeroPress"]
-             [:td "1:6"]]
-            [:tr
-             [:td "French Press"]
-             [:td "1:12"]]
+            (for [[oz desc] cups]
+              [:tr {:key oz :on-click (fn [event] (reset! cup-size-input (-> oz)))}
+               [:td oz]
+               [:td desc]])]]]
 
+         [:div {:class "column"}
+          [:table {:class "table ratios-table"}
+           [:thead
             [:tr
-             [:td "V60"]
-             [:td "3:50"]]
-
+             [:th {:col-span 2} "Coffee to water ratios (select one)"]]
             [:tr
-             [:td "Chemex"]
-             [:td "1:17"]]
+             [:th "Brew device"]
+             [:th
+              [:div "Ratio"]
+              [:small "coffee : water"]]]]
 
-            [:tr
-             [:td "Moka Pot"]
-             [:td "1:10"]]
+           [:tbody
+            (for [[device ratio] ratios]
+              [:tr {:key device :on-click (fn [event] (reset! brew-ratio-input (-> ratio)))}
+               [:td device]
+               [:td (str "1:" ratio)]])]]]
 
-            [:tr
-             [:td "Cold Brew"]
-             [:td "9:40"]]
+        [:div {:class "column"}
+         [:table {:class "table"}
+          [:thead
+           [:tr
+            [:th
+             "Settings"]]]
+          [:tbody
 
-            [:tr
-             [:td "Siphon"]
-             [:td "3:50"]]
+           [:tr
+            [:td
+             [text-input cup-size-input "Cup size (oz) (default 8oz)"]]]
 
-            [:tr
-             [:td "Espresso"]
-             [:td "1:2"]]]]]]
+           [:tr
+            [:td
+             [text-input brew-ratio-input, "Brew ratio (g) (default 17g)"]]]
 
-        [:div "Measurements"]
-         [:div {:class "table-container"}
-        [:table
-         [:thead
-          [:tr
-           [:td "ounces (oz)"]
-           [:td "grams (g)"]
-           [:td "teaspoons (tsp)"]
-           [:td "tablespoons (tbsp)"]
-           [:td "cups"]]]
+           [:tr
+            [:td
+             [text-input bag-size-oz, "Bag size (oz) (default 12oz)"]]]
 
-         [:tbody
-          [:tr
-           [:td oneOz]
-           [:td ozToGrams]
-           [:td ozToTsp]
-           [:td ozToTbsp]
-           [:td ozToCups]]]]]
+           [:tr
+            [:td
+             [text-input bag-cost, "Bag cost (USD)"]]]
+
+           [:tr
+            [:td
+             [:div "Coffee per cup (g)"
+              [:div (formatNumber @coffee-per-cup)]]]]
+
+           [:tr
+            [:td
+             [:div "Water per cup (g)"
+              [:div (formatNumber @water-per-cup)]]]]
+
+           ]]]]
 
         [:div {:class "table-container"}
-         [:table
+         [:table {:class "table"}
           [:thead
            [:tr
             [:th {:class "table-index-header-2"} "Cups of coffee"]
             [:th {:col-span 5, :class "table-coffee-header-1"} "Coffee to be used"]
-            [:th {:col-span 8, :class "table-water-header-2"} "Water to be used"]
+            [:th {:col-span 8, :class "table-water-header-1"} "Water to be used"]
             [:th {:col-span 2, :class "table-brewed-coffee-header-1"} "Brewed coffee yield"]
             [:th {:col-span 1, :class "table-cost-header-1"} "Cost per cup"]]
            [:tr
             [:th {:class "table-index-header-2"} ""]
-            [:th {:col-span 2, :class "table-coffee-header-2"} "by weight"]
-            [:th {:col-span 3, :class "table-coffee-header-2"} "by measurement"]
-            [:th {:col-span 8, :class "table-water-header-2"} ""]
-            [:th {:col-span 2, :class "table-brewed-coffee-header-2"} ""]
-            [:th {:col-span 1, :class "table-cost-header-2"} ""]]
+            [:th {:col-span 2, :class "table-coffee-header-2"} "By weight"]
+            [:th {:col-span 3, :class "table-coffee-header-2"} "By measurement"]
+            [:th {:col-span 8, :class "table-water-header-2"} "By volume"]
+            [:th {:col-span 2, :class "table-brewed-coffee-header-2"} "By volume"]
+            [:th {:col-span 1, :class "table-cost-header-1"} ""]]
            [:tr
             [:th {:class "table-index-header-2"} ""]
-            [:th {:class (str "table-coffee-body-1" " bold")} "grams (g)"]
-            [:th {:class "table-coffee-body-1"} "ounces (oz)"]
-            [:th {:class "table-coffee-body-1"} "teaspoons (tsp)"]
-            [:th {:class "table-coffee-body-1"} "tablespoons (tbsp)"]
-            [:th {:class "table-coffee-body-1"} "cups"]
-            [:th {:class (str "table-water-body-1" " bold")} "grams (g)"]
-            [:th {:class "table-water-body-1"} "fluid ounces (fl oz)"]
-            [:th {:class "table-water-body-1"} "cups"]
-            [:th {:class "table-water-body-1"} "pints"]
-            [:th {:class "table-water-body-1"} "quarts"]
-            [:th {:class "table-water-body-1"} "1/2 gallon"]
-            [:th {:class "table-water-body-1"} "CCs millimeters"]
-            [:th {:class "table-water-body-1"} "liters"]
-            [:th {:class "table-brewed-coffee-body-1"} "grams (g)"]
-            [:th {:class "table-brewed-coffee-body-1"} "fluid ounces (fl oz)"]
-            [:th {:class "table-cost-body-1"} "$ (USD)"]]]
+            [:th {:class "table-coffee-body-1 bold left-align"} "Grams (g)"]
+            [:th {:class "table-coffee-body-1 left-align"} "Ounces (oz)"]
+            [:th {:class "table-coffee-body-1 left-align"} "Teaspoons (tsp)"]
+            [:th {:class "table-coffee-body-1 left-align"} "Tablespoons (tbsp)"]
+            [:th {:class "table-coffee-body-1 left-align"} "Cups"]
+            [:th {:class "table-water-body-1 bold left-align"} "Grams (g)"]
+            [:th {:class "table-water-body-1 left-align"} "Fluid Ounces (fl oz)"]
+            [:th {:class "table-water-body-1 left-align"} "Cups"]
+            [:th {:class "table-water-body-1 left-align"} "Pints"]
+            [:th {:class "table-water-body-1 left-align"} "Quarts"]
+            [:th {:class "table-water-body-1 left-align"} "1/2 Gallon"]
+            [:th {:class "table-water-body-1 left-align"} "CCs (Millimeters)"]
+            [:th {:class "table-water-body-1 left-align"} "Liters"]
+            [:th {:class "table-brewed-coffee-body-1 left-align"} "Grams (g)"]
+            [:th {:class "table-brewed-coffee-body-1 left-align"} "Fluid ounces (fl oz)"]
+            [:th {:class "table-cost-body-1 left-align"} "USD"]]]
 
           [calc-rows]]]
+
+        [:div {:class "content"}
+         [:p
+          "To determine the amount of water to be used with fractional amounts of coffee, multiply the weight of the coffee by the following factors: 16 (0.0625 is the inverse factor) to get fluid ounces of water: 16.6945 (0.0599 is the inverse factor) for grams to get CCs of water."]
+
+         [:p
+          "For example: if you have 1.2 ounces of coffee (by weight), you would multiply 1.2 times 16.0 to get 19.2 fluid ounces of water needed. If you’re using the metric system, 92.6 grams of coffee would require 1562 CCs (1.56 liters) of water. Use the inverse factor to determine the amount of coffee to use with an unlisted amount of water. In other words, you multiply the inverse factor times the amount of water to determine the weight of the coffee to be used."]
+         [:p
+          [:strong
+           "It is important to know that measuring by volume is not precise due to the fact that different coffees can have different densities. Measuring by weight is the only way to be precise."]]]
+
         [:div {:class "table-container"}
-         [:table
+         [:table {:class "table"}
+          [:thead
+           [:tr
+            [:th {:col-span 5} "Measurements"]]
+           [:tr
+            [:th {:class "left-align"} "ounces (oz)"]
+            [:th {:class "left-align"} "Grams (g)"]
+            [:th {:class "left-align"} "Teaspoons (tsp)"]
+            [:th {:class "left-align"} "Tablespoons (tbsp)"]
+            [:th {:class "left-align"} "Cups"]]]
+
+          [:tbody
+           [:tr
+            [:td oneOz]
+            [:td ozToGrams]
+            [:td ozToTsp]
+            [:td ozToTbsp]
+            [:td ozToCups]]]]]
+
+        [:div {:class "table-container"}
+         [:table {:class "table"}
           [:thead
            [:tr
             [:th {:col-span 3} "Factors for units of measures to get Fluid Oz needed"]]
@@ -234,7 +292,7 @@
             [:td "0.0.208"]]]]]
 
         [:div {:class "table-container"}
-         [:table
+         [:table {:class "table"}
           [:thead
            [:tr
             [:th {:col-span 6} "Volume Conversions"]]
@@ -358,16 +416,16 @@
             [:td "33.8067"]
             [:td "Liters"]
             [:td "0.001"]
-            [:td "1000"]]
-           [:tr
-            [:td {:col-span 6} "To use the inverse factor, multiply the number of units to convert by the inverse factor. For example, to determine how many Fluid oz there are in 37 CCs, multiply 37 time s 0.0338 to get 1.25 Fl oz"]]]]]
+            [:td "1000"]]]]]
 
-        [:p "the proportion of ground coffee used in relation to the amount of water used is the brewing ratio."]
-        [:p "the amount of solubles that have been extracted in relation to amount of water after brewing is the drinking ratio."]
-        [:p "it's always wiser to brew it on the stronger side and then cut it down to taste by adding water."]
-        [:p "water can be added after brewing to reduce concentration, thus changin drinking ratio."]
-
-        ]))))
+        [:div {:class "content"}
+         [:p "To use the inverse factor, multiply the number of units to convert by the inverse factor. For example, to determine how many Fluid oz there are in 37 CCs, multiply 37 time s 0.0338 to get 1.25 Fl oz"]
+         [:p "The proportion of ground coffee used in relation to the amount of water used is the brewing ratio."]
+         [:p "The amount of solubles that have been extracted in relation to amount of water after brewing is the drinking ratio."]
+         [:p "It's always wiser to brew it on the stronger side and then cut it down to taste by adding water."]
+         [:p "Water can be added after brewing to reduce concentration, thus changin drinking ratio."]]
+        [:footer {:class "footer"}
+         "©2021 CoffeeCalculator.net"]]))))
 
 (comment
 

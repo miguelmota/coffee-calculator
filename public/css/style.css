@@ -1,140 +1,168 @@
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 body {
-	 background-color: #f4ebe6;
-	 background-size: cover;
-	 background-position: top right;
-   background-attachment: fixed;
-   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background-color: #f4ebe6;
+  background-size: cover;
+  background-position: top right;
+  background-attachment: fixed;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 16px;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
   color: #000;
 }
-
 main {
-	padding: 2rem;
+  font-size: 1.2rem;
 }
-
-.title {
-}
-
-.title a,
-.title a:hover {
-  text-decoration: none;
-  color: #000;
-}
-
-.settings {
-  display: flex;
-  justify-content: space-around;
-}
-
-.column {
-}
-
-@media (max-width: 500px) {
-  .settings {
-    flex-direction: column;
-  }
-  .column {
-    margin-bottom: 1rem;
-  }
-}
-
-.input-container label {
-  display: block;
-}
-
-input[type="text"] {
-  font-size: 16px;
-}
-
-.table-container {
-  overflow: auto;
+p {
   margin-bottom: 1rem;
 }
-
+input[type="text"] {
+  width: 100%;
+  font-size: 16px;
+  padding: 0.6rem 0.2rem;
+}
 table, th, td {
   border: none;
   outline: 0;
   border-collapse: collapse;
 }
-
-
-table th {
-	font-weight: normal;
+th {
+  font-weight: normal;
 }
-
 th,
 td {
-	padding: 0.5rem;
+  padding: 0.5rem;
   border: 1px solid #fff;
- 	white-space: nowrap;
+  white-space: nowrap;
 }
-
+th {
+  background: #eaddd8;
+}
+td {
+  background: #fff8f5;
+}
+table tr:nth-child(odd) {
+  filter: brightness(0.95);
+}
+table tr:nth-child(even) {
+  filter: brightness(1);
+}
+table tr:hover {
+  filter: brightness(1);
+}
 table tr:hover td {
- 	filter: brightness(0.95);
+  background: #fff;
 }
-
 .bold {
-	font-weight: bold;
+  font-weight: bold;
 }
-
+.left-align {
+  text-align: left;
+}
+.header {
+  padding: 2rem;
+}
+.title {
+}
+.title a,
+.title a:hover {
+  text-decoration: none;
+  color: #000;
+}
+.input-container label {
+  display: block;
+}
+.table-container {
+  overflow: auto;
+  margin-bottom: 1rem;
+}
+.table {
+  width: 100%;
+}
 .table-index-header-1 {
-	background: #dfcfac;
- 	border-bottom: 1px solid transparent;
+  background: #eee0bf;
+  border-bottom: 1px solid transparent;
 }
 .table-index-header-2 {
-	background: #ecdcb9;
- 	border-bottom: 1px solid transparent;
+  background: #f4ead0;
+  border-bottom: 1px solid transparent;
 }
 .table-index-body-1 {
-	background: #f9eac7;
+  background: #fff4d9;
 }
-
 .table-coffee-header-1 {
-	background: #e3c7b1;
- 	border-bottom: 1px solid transparent;
+  background: #e8d9ce;
+  border-bottom: 1px solid transparent;
 }
 .table-coffee-header-2 {
-	background: #f0d6c1;
- 	border-bottom: 1px solid transparent;
+  background: #f2e6dd;
+  border-bottom: 1px solid transparent;
 }
 .table-coffee-body-1 {
-	background: #ffe5cf;
+  background: #fff2e8;
 }
-
 .table-water-header-1 {
-	background: #aed0df;
- 	border-bottom: 1px solid transparent;
+  background: #cce1ea;
+  border-bottom: 1px solid transparent;
 }
 .table-water-header-2 {
-	background: #c2dfec;
- 	border-bottom: 1px solid transparent;
+  background: #e0eef4;
+  border-bottom: 1px solid transparent;
 }
 .table-water-body-1 {
-	background: #d9eff9;
+  background: #effaff;
 }
-
 .table-brewed-coffee-header-1 {
-	background: #800000;
+  background: #EACCC3;
+  border-bottom: 1px solid transparent;
 }
 .table-brewed-coffee-header-2 {
-	background: #8B0000;
+  background: #F7E0D9;
+  border-bottom: 1px solid transparent;
 }
 .table-brewed-coffee-body-1 {
-	background: #A52A2A;
+  background: #FFE8E1;
 }
-
 .table-cost-header-1 {
-	background: #32CD32;
+  background: #D6EED6;
+  border-bottom: 1px solid transparent;
 }
 .table-cost-header-2 {
-	background: #00FF00;
+  background: #E5F7E5;
+  border-bottom: 1px solid transparent;
 }
 .table-cost-body-1 {
-	background: #98FB98;
+  background: #EFFFEF;
+}
+.ratios-table tr:hover {
+  cursor: pointer;
+  background-color: #eee2dc;
+}
+.settings {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 2rem;
+}
+.column {
+  width: 100%;
+  padding: 1rem;
+}
+@media (max-width: 1000px) {
+  .settings {
+   flex-direction: column;
+  }
+  .column {
+   margin-bottom: 1rem;
+  }
+}
+.content {
+  padding: 1rem;
+}
+.footer {
+  padding: 2rem;
 }
