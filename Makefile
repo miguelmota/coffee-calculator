@@ -2,7 +2,7 @@ serve:
 	(cd public && python -m http.server --bind 0.0.0.0 8000)
 
 build:
-	rm public/js/main.js
+	rm -rf public/js/main.js
 	lein cljsbuild once
 
 watch:

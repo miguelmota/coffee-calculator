@@ -18,6 +18,8 @@ body {
 main {
   font-size: 1.2rem;
 }
+.inner {
+}
 p {
   margin-bottom: 1rem;
 }
@@ -26,19 +28,28 @@ input[type="text"] {
   font-size: 16px;
   padding: 0.6rem 0.2rem;
 }
+table {
+  table-layout: collapse;
+  border-collapse: collapse;
+}
 table, th, td {
   border: none;
   outline: 0;
-  border-collapse: collapse;
 }
 th {
   font-weight: normal;
 }
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
 th,
 td {
-  padding: 0.5rem;
-  border: 1px solid #fff;
   white-space: nowrap;
+}
+th {
+  padding: 0.5rem;
 }
 th {
   background: #eaddd8;
@@ -46,17 +57,40 @@ th {
 td {
   background: #fff8f5;
 }
-table tr:nth-child(odd) {
+tr.selected {
+  filter: brightness(1);
+}
+tr td > div {
+  padding: 0.5rem;
+}
+tr.selected td {
+  background: #d0e8f2
+}
+tr.selected td > div {
+  border-top: 1px solid #426377;
+  border-bottom: 1px solid #426377;
+}
+tr.selected td:first-child > div {
+  border-left: 1px solid #426377;
+}
+tr.selected td:last-child > div {
+  border-right: 1px solid #426377;
+}
+table tr:nth-child(odd):not(.selected) {
   filter: brightness(0.95);
 }
-table tr:nth-child(even) {
+table tr:nth-child(even):not(.selected) {
   filter: brightness(1);
 }
-table tr:hover {
-  filter: brightness(1);
-}
-table tr:hover td {
+table tr:hover:not(.selected) td {
   background: #fff;
+  filter: brightness(1);
+}
+table tr:hover:not(.selected) td:first-child {
+  border-left: 1px solid #000;
+}
+table .icon {
+  width: 32px;
 }
 .bold {
   font-weight: bold;
@@ -77,8 +111,14 @@ table tr:hover td {
 .input-container label {
   display: block;
 }
+.table-container-container {
+  position: relative;
+}
 .table-container {
-  overflow: auto;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
   margin-bottom: 1rem;
 }
 .table {
@@ -86,62 +126,64 @@ table tr:hover td {
 }
 .table-index-header-1 {
   background: #eee0bf;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid #fff;
 }
 .table-index-header-2 {
   background: #f4ead0;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid #fff;
 }
 .table-index-body-1 {
   background: #fff4d9;
 }
 .table-coffee-header-1 {
   background: #e8d9ce;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid #fff;
 }
 .table-coffee-header-2 {
   background: #f2e6dd;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid #fff;
 }
 .table-coffee-body-1 {
   background: #fff2e8;
 }
 .table-water-header-1 {
   background: #cce1ea;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid #fff;
 }
 .table-water-header-2 {
   background: #e0eef4;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid #fff;
 }
 .table-water-body-1 {
   background: #effaff;
 }
 .table-brewed-coffee-header-1 {
   background: #EACCC3;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid #fff;
 }
 .table-brewed-coffee-header-2 {
   background: #F7E0D9;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid #fff;
 }
 .table-brewed-coffee-body-1 {
   background: #FFE8E1;
 }
 .table-cost-header-1 {
   background: #D6EED6;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid #fff;
 }
 .table-cost-header-2 {
   background: #E5F7E5;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid #fff;
 }
 .table-cost-body-1 {
   background: #EFFFEF;
 }
 .ratios-table tr:hover {
-  cursor: pointer;
   background-color: #eee2dc;
+}
+.ratios-table tr:hover td {
+  cursor: pointer;
 }
 .settings {
   display: flex;

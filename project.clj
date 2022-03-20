@@ -21,6 +21,7 @@
         ; (See the ClojureScript compiler documentation for details.)
         :compiler {
           :output-to "public/js/main.js"  ; default: target/cljsbuild-main.js
+          ; e.g. :whitespace or :advanced
           :optimizations :advanced
           :pretty-print false}}]}
   )
