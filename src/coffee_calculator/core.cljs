@@ -224,8 +224,8 @@
                                                   (reset! brewDeviceCupSizeInput (-> (first ((keyword device) brewDeviceCupSizes))))))}
               [:td
                [:div
-                [:img {:class "icon" :on-error (fn [event]
-                                                 (-> event .-target .-style .-display (set! "none"))) :src (str "./images/devices/" (subs (str device) 1) ".png")}]
+                [:img {:class "icon" :alt device :on-error (fn [event]
+                                                 (-> event .-target .-style .-display (set! "none"))) :src (str "./images/devices/" (subs (str device) 1) ".webp")}]
                 (first ((keyword device) devices))]]])]]]])
 
      (defn renderBrewDeviceSizeSelection []
