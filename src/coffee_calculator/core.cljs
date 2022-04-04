@@ -38,42 +38,6 @@
                       (keyword "siphon") [true],
                       (keyword "hario-v60") [true]))
 
-(def images (hash-map
-             (keyword "aeropress") ["aeropress.jpg"]
-             (keyword "april") ["april.webp"]
-             (keyword "belgian-siphon") ["belgian-siphon.jpg"]
-             (keyword "cafelat-robot") ["cafelat-robot.jpg"]
-             (keyword "cafflano-kompact") ["cafflano-kompact.jpg"]
-             (keyword "cafflano-kompresso") ["cafflano-kompresso.jpg"]
-             (keyword "cezve") ["cezve.jpg"]
-             (keyword "chemex") ["chemex.jpg"]
-             (keyword "clever-dripper") ["clever-dripper.jpg"]
-             (keyword "cold-brew") ["cold-brew.webp"]
-             (keyword "delter-press") ["delter-press.jpg"]
-             (keyword "espresso") ["espresso.jpg"]
-             (keyword "eva-solo") ["eva-solo.jpg"]
-             (keyword "flair") ["flair.jpg"]
-             (keyword "french-press") ["french-press.jpg"]
-             (keyword "gina") ["gina.webp"]
-             (keyword "hario-switch") ["hario-switch.webp"]
-             (keyword "hario-v60") ["hario-v60.jpg"]
-             (keyword "hario-woodneck") ["hario-woodneck.jpg"]
-             (keyword "kalita-wave") ["kalita-wave.webp"]
-             (keyword "kono") ["kono.webp"]
-             (keyword "moka-pot") ["moka-pot.webp"]
-             (keyword "neapolitan-flip") ["neapolitan-flip.jpg"]
-             (keyword "origami") ["origami.webp"]
-             (keyword "phin") ["phin.jpg"]
-             (keyword "rok") ["rok.jpg"]
-             (keyword "siphon") ["siphon.webp"]
-             (keyword "staresso-mini") ["staresso-mini.jpg"]
-             (keyword "staresso") ["staresso.webp"]
-             (keyword "staresso-pro") ["staresso-pro.webp"]
-             (keyword "stelton-collar") ["stelton-collar.jpg"]
-             (keyword "tricolate") ["tricolate.jpg"]
-             (keyword "vacone") ["vacone.webp"]
-             (keyword "yama-siphon") ["yama-siphon.jpg"]))
-
 (def devices (hash-map
               (keyword "aeropress") ["AeroPress"]
               (keyword "april") ["April"]
@@ -260,7 +224,8 @@
                                                   (reset! brewDeviceCupSizeInput (-> (first ((keyword device) brewDeviceCupSizes))))))}
               [:td
                [:div
-                [:img {:class "icon" :on-error (fn [event] (-> event .-target .-style .-display (set! "none"))) :src (str "./images/" (first ((keyword device) images)))}]
+                [:img {:class "icon" :on-error (fn [event]
+                                                 (-> event .-target .-style .-display (set! "none"))) :src (str "./images/devices/" (subs (str device) 1) ".png")}]
                 (first ((keyword device) devices))]]])]]]])
 
      (defn renderBrewDeviceSizeSelection []
